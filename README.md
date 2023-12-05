@@ -1,5 +1,5 @@
 
-# Recommendation system for Bigbasket Product
+# Recommendation system for Bigbasket Products
 
 [Dataset(Kaggle) Link](https://www.kaggle.com/datasets/surajjha101/bigbasket-entire-product-list-28k-datapoints)
 

@@ -1,4 +1,12 @@
 import streamlit as st
+import pandas as pd 
+
+
+df = pd.read_csv('recommendationService/recommend.csv')
+
+product_indices = pd.Series(df.index, index=df['product'])
+
+
 
 # Sample product data
 products = [
@@ -10,15 +18,15 @@ products = [
 
 # Function to search for products based on a query
 def search_products(query):
-    return [product for product in products if query.lower() in product["name"].lower()]
+    return df[df["product"].str.lower().str.contains(query.lower())]
 
 # Streamlit app
 def main():
     st.title("Big Basket")
 
-    # Search bar
-    search_query = st.text_input("Search for products:")
-    
+    # Real-time search input
+    search_query = st.text_input("Search for products:", key="search")
+
     # Display products based on search
     if search_query:
         search_results = search_products(search_query)
@@ -27,12 +35,18 @@ def main():
         else:
             st.subheader("Search Results:")
             for product in search_results:
-                st.write(f"**{product['name']}** - {product['description']}")
+                # Button for each search result
+                if st.button(f"View Details for {product['name']}"):
+                    st.subheader("Product Details:")
+                    st.write(f"**{product['name']}** - {product['description']}")
     else:
         # Display all products if no search query
         st.subheader("All Products:")
         for product in products:
-            st.write(f"**{product['name']}** - {product['description']}")
+            # Button for each product
+            if st.button(f"View Details for {product['name']}"):
+                st.subheader("Product Details:")
+                st.write(f"**{product['name']}** - {product['description']}")
 
 if __name__ == "__main__":
     main()

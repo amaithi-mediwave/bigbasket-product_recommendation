@@ -1,0 +1,7 @@
+recommendationService/recommend.csv
+recommendationService/cosine_sim.joblib
+
+notebook/cleaned_data.csv
+notebook/data_prepared.csv
+data/processed_data/data_prepared.csv
+src/__pycache__

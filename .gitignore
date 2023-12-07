@@ -5,3 +5,4 @@ notebook/cleaned_data.csv
 notebook/data_prepared.csv
 data/processed_data/data_prepared.csv
 src/__pycache__
+recommendationService/__pycache__

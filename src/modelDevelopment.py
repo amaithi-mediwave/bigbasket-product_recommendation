@@ -7,6 +7,7 @@ from pathlib import Path
 
 def model_development(config_path):
     
+    print("-------------------- MODEL DEVELOPMENT INITIATED------------------", end='\n\n')
     
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
@@ -18,10 +19,10 @@ def model_development(config_path):
     
     
     model_path = os.path.join(model_path, 'cosine_sim.joblib')
-    # print(model_path)
     
     df = pd.read_csv(processed_data_path)
     
+    # TFIDF MODEL & COSINE SIMILIARITY(METRIC) MODEL
     
     Tfidf = TfidfVectorizer(stop_words='english')
     
@@ -36,7 +37,7 @@ def model_development(config_path):
 
     df.to_csv(recommend_data_path)
 
-
+    print("-------------------- COMPLETED ------------------", end='\n\n')
 
 
 

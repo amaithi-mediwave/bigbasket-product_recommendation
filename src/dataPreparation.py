@@ -8,6 +8,7 @@ from getData import get_dataframe, read_params
 
 def data_preparation(config_path):
     
+    print("-------------------- DATA PREPARATION INITIATED------------------", end='\n\n')
     config = read_params(config_path)
     processed_data_path = config['data_source']['preprocessed_data_source']
     
@@ -61,7 +62,7 @@ def data_preparation(config_path):
     
     df.to_csv(processed_data_path, index_label='index')
 
-
+    print("-------------------- COMPLETED------------------", end='\n\n')
 
 
 

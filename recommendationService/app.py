@@ -1,52 +1,73 @@
+
+
 import streamlit as st
-import pandas as pd 
+import pandas as pd
+from recommender import get_recommendations
 
 
-df = pd.read_csv('recommendationService/recommend.csv')
-
-product_indices = pd.Series(df.index, index=df['product'])
-
-
-
-# Sample product data
-products = [
-    {"name": "vinoth", "description": "Description of Product 1"},
-    {"name": "magizh", "description": "Description of Product 2"},
-    {"name": "arun", "description": "Description of Product 3"},
-    # Add more products as needed
-]
+products_df = pd.read_csv('recommendationService/recommend.csv')
 
 # Function to search for products based on a query
 def search_products(query):
-    return df[df["product"].str.lower().str.contains(query.lower())]
+    return products_df[products_df["product"].str.lower().str.contains(query.lower(), na=False)]
+
+
+def format_func(option):
+    return products_df[option]
+
+
+
 
 # Streamlit app
 def main():
-    st.title("Big Basket")
+    st.title("Big Basket Product Recommendation")
 
-    # Real-time search input
-    search_query = st.text_input("Search for products:", key="search")
+    # Search bar
+    search_query = st.text_input("Search for products:")
+
 
     # Display products based on search
     if search_query:
+        
         search_results = search_products(search_query)
-        if not search_results:
+        if search_results.empty:
             st.warning("No products found.")
         else:
             st.subheader("Search Results:")
-            for product in search_results:
-                # Button for each search result
-                if st.button(f"View Details for {product['name']}"):
-                    st.subheader("Product Details:")
-                    st.write(f"**{product['name']}** - {product['description']}")
+            
+            selected_product_index = st.selectbox("Select a product to view details:", options= search_results.index, format_func = lambda x : search_results.loc[x, 'product'] ) #, format_func=lambda x:search_results.product) 
+            
+            selected_product = search_results.loc[selected_product_index]
+            
+            st.subheader("Product Details:")
+            st.write(f"**{selected_product['product']}** - {selected_product['brand']}")
+            st.write(f"Description: {selected_product['description']}")
+            
+            
+            # ---------------------RECOMMENDATION SYSTEM--------------------
+            
+            st.subheader("Recommended Products:")
+            
+            df = get_recommendations(selected_product['index'])
+           
+            for index, row in df.iterrows():
+                
+                discount_percentage = (float(row['market_price']) - float(row['sale_price'])) / (row['market_price']) * 100
+                
+                st.write(f"**{row['product']}**  - Offer : {int(discount_percentage)}%  - Rating : {row['rating']}")
+                
+                
+            # ----------------------------------------------------------------
+            
+            
+            
     else:
-        # Display all products if no search query
-        st.subheader("All Products:")
-        for product in products:
-            # Button for each product
-            if st.button(f"View Details for {product['name']}"):
-                st.subheader("Product Details:")
-                st.write(f"**{product['name']}** - {product['description']}")
+        # Display all(30) products if no search query
+        st.subheader("Our Products:")
+        # for _, product in products_df.iloc[:30].iterrows():
+        for _, product in products_df.sample(n=30).iterrows():
+
+            st.write(f"**{product['product']}** - {product['brand']}")
 
 if __name__ == "__main__":
     main()
